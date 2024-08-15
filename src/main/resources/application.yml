@@ -7,7 +7,18 @@ spring:
   cache:
     type: redis
     redis:
-      time-to-live: 60s # Tempo de vida dos itens no cache
+      time-to-live: 10s # Tempo de vida dos itens no cache
 
 server:
   port: 8080
+
+logging:
+  level:
+    org.springframework.cache: INFO
+    org.springframework.data.redis: INFO
+
+    # org.springframework.cache: DEBUG
+    # org.springframework.data.redis: DEBUG
+    # org.springframework.cache.interceptor: DEBUG
+
+
