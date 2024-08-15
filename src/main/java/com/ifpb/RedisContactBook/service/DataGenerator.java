@@ -1,11 +1,27 @@
-package com.ifpb.RedisContactBook.model;
+package com.ifpb.RedisContactBook.service;
 
 import java.util.UUID;
 
-import com.github.javafaker.Faker;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import com.github.javafaker.Faker;
+import com.ifpb.RedisContactBook.model.Contact;
+
+@Service
 public class DataGenerator {
+
+     @Autowired
+    private ContactService contactService;
+
     private Faker faker = new Faker();
+
+    public void generateAndSaveContacts(int numberOfContacts) {
+        for (int i = 0; i < numberOfContacts; i++) {
+            Contact contact = generateRandomContact();
+            contactService.save(contact);
+        }
+    }
 
     public Contact generateRandomContact() {
         String id = UUID.randomUUID().toString(); // Gera um ID único
