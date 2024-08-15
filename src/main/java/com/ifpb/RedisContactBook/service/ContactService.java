@@ -4,6 +4,7 @@ import com.ifpb.RedisContactBook.exceptions.NotFoundException;
 import com.ifpb.RedisContactBook.model.Contact;
 import com.ifpb.RedisContactBook.repository.ContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -54,6 +55,7 @@ public class ContactService {
         return contactOptional.get();
     }
 
+    @Cacheable("contacts")
     public Iterable<Contact> findAll() {
         return contactRepository.findAll();
     }
