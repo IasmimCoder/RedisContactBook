@@ -65,6 +65,10 @@ public class ContactService {
         contactRepository.deleteById(id);
     }
 
+    public void deleteAll(){
+        contactRepository.deleteAll();
+    }
+
     private static boolean validarTelefone(String telefone){
         //retira todos os caracteres não-numéricos (incluindo espaço,tab, etc)
        telefone = telefone.replaceAll("\\D","");
