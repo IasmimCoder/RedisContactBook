@@ -7,7 +7,7 @@ import com.github.javafaker.Faker;
 public class DataGenerator {
     private Faker faker = new Faker();
 
-    public Contact generateRandomContato() {
+    public Contact generateRandomContact() {
         String id = UUID.randomUUID().toString(); // Gera um ID único
         String name = faker.name().fullName();
         String ddd = faker.number().digits(2); // DDD com 2 dígitos
