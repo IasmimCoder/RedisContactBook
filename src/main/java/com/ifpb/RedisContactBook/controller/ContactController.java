@@ -28,7 +28,9 @@ public class ContactController {
 
     @GetMapping
     public ResponseEntity<Iterable<Contact>> getAllContacts() {
-        return ResponseEntity.ok(contactService.findAll());
+        contactService.checkCache(); // Verifica se o cache foi utilizado
+        Iterable<Contact> contacts = contactService.findAll();
+        return ResponseEntity.ok(contacts);
     }
 
     @PutMapping("/{id}")

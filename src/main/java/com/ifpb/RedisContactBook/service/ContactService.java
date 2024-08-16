@@ -3,7 +3,13 @@ package com.ifpb.RedisContactBook.service;
 import com.ifpb.RedisContactBook.exceptions.NotFoundException;
 import com.ifpb.RedisContactBook.model.Contact;
 import com.ifpb.RedisContactBook.repository.ContactRepository;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.interceptor.SimpleKey;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,6 +20,23 @@ public class ContactService {
     @Autowired
     private ContactRepository contactRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(ContactService.class);
+    private final CacheManager cacheManager;
+
+    @Autowired
+    public ContactService(CacheManager cacheManager) {
+        this.cacheManager = cacheManager;
+    }
+
+    public void checkCache() {
+        var cache = cacheManager.getCache("contacts");
+        var value = cache.get(SimpleKey.EMPTY); //O SimpleKey.EMPTY é utilizado para métodos sem parâmetros
+        if (value != null) {
+            logger.info("Usando cache para findAll");
+        } else {
+            logger.info("Nenhum cache encontrado para findAll");
+        }
+    }
 
     public Contact save (Contact contact) {
         if(!validarTelefone(contact.getNumber())){
@@ -54,7 +77,10 @@ public class ContactService {
         return contactOptional.get();
     }
 
+    @Cacheable(value = "contacts")
     public Iterable<Contact> findAll() {
+        // System.out.println("Método findAll() chamado.");
+        logger.info("Método findAll chamado - buscando contatos do banco de dados");
         return contactRepository.findAll();
     }
 
