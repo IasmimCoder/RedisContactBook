@@ -3,6 +3,7 @@ package com.ifpb.RedisContactBook.controller;
 import com.ifpb.RedisContactBook.model.Contact;
 import com.ifpb.RedisContactBook.service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.interceptor.SimpleKey;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +24,14 @@ public class ContactController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Contact> getContact(@PathVariable String id) {
-        return ResponseEntity.ok(contactService.findById(id));
+        contactService.checkCache(id);
+        Contact contact = contactService.findById(id);
+        return ResponseEntity.ok(contact);
     }
 
     @GetMapping
     public ResponseEntity<Iterable<Contact>> getAllContacts() {
-        contactService.checkCache(); // Verifica se o cache foi utilizado
+        contactService.checkCache(SimpleKey.EMPTY.toString()); // Verifica se o cache foi utilizado
         Iterable<Contact> contacts = contactService.findAll();
         return ResponseEntity.ok(contacts);
     }

@@ -31,13 +31,13 @@ public class ContactService {
         this.cacheManager = cacheManager;
     }
 
-    public void checkCache() {
+    public void checkCache(String id) {
         var cache = cacheManager.getCache("contacts");
-        var value = cache.get(SimpleKey.EMPTY); //O SimpleKey.EMPTY é utilizado para métodos sem parâmetros
+        var value = cache.get(id); //O SimpleKey.EMPTY é utilizado para métodos sem parâmetros
         if (value != null) {
-            logger.info("Usando cache para findAll");
+            logger.info("Usando cache para find");
         } else {
-            logger.info("Nenhum cache encontrado para findAll");
+            logger.info("Nenhum cache encontrado para find");
         }
     }
 
@@ -82,12 +82,12 @@ public class ContactService {
         Optional<Contact> contactOptional = contactRepository.findById(id);
         if (!contactOptional.isPresent())
             throw new NotFoundException("Contato não encontrado!");
+        logger.info("Método findById chamado - buscando contatos do banco de dados");
         return contactOptional.get();
     }
 
     @Cacheable(value = "contacts")
     public Iterable<Contact> findAll() {
-        // System.out.println("Método findAll() chamado.");
         logger.info("Método findAll chamado - buscando contatos do banco de dados");
         return contactRepository.findAll();
     }
