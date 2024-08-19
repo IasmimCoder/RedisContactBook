@@ -11,5 +11,4 @@ public class RedisContactBookApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RedisContactBookApplication.class, args);
 	}
-
 }

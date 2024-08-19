@@ -1,10 +1,8 @@
 package com.ifpb.RedisContactBook.service;
 
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.github.javafaker.Faker;
 import com.ifpb.RedisContactBook.model.Contact;
 
@@ -14,7 +12,7 @@ public class DataGenerator {
      @Autowired
     private ContactService contactService;
 
-    private Faker faker = new Faker();
+    private final Faker faker = new Faker();
 
     public void generateAndSaveContacts(int numberOfContacts) {
         for (int i = 0; i < numberOfContacts; i++) {
@@ -33,6 +31,4 @@ public class DataGenerator {
 
         return new Contact(id, name, ddd, number, secondNumber, email);
     }
-
-    // Métodos adicionais para gerar listas de contatos ou dados específicos
 }

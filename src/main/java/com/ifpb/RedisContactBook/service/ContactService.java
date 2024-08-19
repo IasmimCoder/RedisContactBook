@@ -3,18 +3,14 @@ package com.ifpb.RedisContactBook.service;
 import com.ifpb.RedisContactBook.exceptions.NotFoundException;
 import com.ifpb.RedisContactBook.model.Contact;
 import com.ifpb.RedisContactBook.repository.ContactRepository;
-
 import com.ifpb.RedisContactBook.utilities.Validations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.interceptor.SimpleKey;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service
@@ -24,22 +20,6 @@ public class ContactService {
     private ContactRepository contactRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(ContactService.class);
-    private final CacheManager cacheManager;
-
-    @Autowired
-    public ContactService(CacheManager cacheManager) {
-        this.cacheManager = cacheManager;
-    }
-
-    public void checkCache() {
-        var cache = cacheManager.getCache("contacts");
-        var value = cache.get(SimpleKey.EMPTY); //O SimpleKey.EMPTY é utilizado para métodos sem parâmetros
-        if (value != null) {
-            logger.info("Usando cache para findAll");
-        } else {
-            logger.info("Nenhum cache encontrado para findAll");
-        }
-    }
 
     @CacheEvict(value = "contacts", allEntries = true)
     @CachePut(value = "contacts")
@@ -57,7 +37,7 @@ public class ContactService {
     @CachePut(value = "contacts")
     public Contact update(String id, Contact contact){
         Optional<Contact> contactOptional = contactRepository.findById(id);
-        if (!contactOptional.isPresent())
+        if (contactOptional.isEmpty())
             throw new NotFoundException("Contato não encontrado!");
         Contact var = contactOptional.get();
 
@@ -77,17 +57,17 @@ public class ContactService {
         return contactRepository.save(var);
     }
 
-    @Cacheable(value = "contacts", key = "#id")
+    @Cacheable(value = "contacts", key = "#id") // o cache recebe um id igual ao objeto recuperado do BD
     public Contact findById(String id) {
         Optional<Contact> contactOptional = contactRepository.findById(id);
-        if (!contactOptional.isPresent())
+        logger.info("Método findById chamado - buscando contatos do banco de dados");
+        if (contactOptional.isEmpty())
             throw new NotFoundException("Contato não encontrado!");
         return contactOptional.get();
     }
 
     @Cacheable(value = "contacts")
     public Iterable<Contact> findAll() {
-        // System.out.println("Método findAll() chamado.");
         logger.info("Método findAll chamado - buscando contatos do banco de dados");
         return contactRepository.findAll();
     }
@@ -96,7 +76,7 @@ public class ContactService {
     @CachePut(value = "contacts")
     public void deleteById(String id) {
        Optional<Contact> contactOptional = contactRepository.findById(id);
-       if (!contactOptional.isPresent())
+       if (contactOptional.isEmpty())
            throw new NotFoundException("Contato não encontrado!");
         contactRepository.deleteById(id);
     }
