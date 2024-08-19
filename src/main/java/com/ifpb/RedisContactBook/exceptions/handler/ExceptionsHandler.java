@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
 import com.ifpb.RedisContactBook.exceptions.BadRequestException;
 import com.ifpb.RedisContactBook.exceptions.ExceptionResponse;
 import com.ifpb.RedisContactBook.exceptions.NotFoundException;

@@ -3,13 +3,11 @@ package com.ifpb.RedisContactBook.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-
 import java.io.Serializable;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-@Data // Gera getters, setters, toString(), equals() e hashCode() automaticamente
+@Data // Gera getter's, setter's, toString(), equals() e hashCode() automaticamente
 @NoArgsConstructor // Gera um construtor sem argumentos
 @AllArgsConstructor // Gera um construtor com todos os argumentos
 @RedisHash()
